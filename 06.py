@@ -2,9 +2,7 @@
 R = {(1, 0): (0, -1), (0, -1): (-1, 0), (-1, 0): (0, 1), (0, 1): (1, 0)}
 M = dict()  # where obstacles are
 for r, row in enumerate(open("06.input").readlines()):
-    for c, item in enumerate(row):
-        if item == "\n":
-            continue
+    for c, item in enumerate(row.strip()):
         M[(r, c)] = item
         if item == "^":
             initloc = (r, c)
