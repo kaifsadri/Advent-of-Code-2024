@@ -1,24 +1,28 @@
-M = list(list(line.strip()) for line in open("06.input").readlines())
+# Setup:
 R = {(1, 0): (0, -1), (0, -1): (-1, 0), (-1, 0): (0, 1), (0, 1): (1, 0)}
+M = dict()  # where obstacles are
+for r, row in enumerate(open("06.input").readlines()):
+    for c, item in enumerate(row):
+        if item == "\n":
+            continue
+        M[(r, c)] = item
+        if item == "^":
+            initloc = (r, c)
+d = (-1, 0)  # point up
+
 
 # Part 1:
-been = set()
-d = (-1, 0)  # point up
-for row in range(len(M)):
-    for col in range(len(M[0])):
-        if M[row][col] == "^":
-            initloc = (row, col)
-
 p = initloc
+been = {initloc}
 while True:
-    been.add(p)
     np = (p[0] + d[0], p[1] + d[1])
-    if not (0 <= np[0] < len(M) and 0 <= np[1] < len(M[0])):
+    if np not in M:
         break
-    elif M[np[0]][np[1]] == "#":
+    elif M[np] == "#":
         d = R[d]
     else:
         p = np
+        been.add(p)
 print(f"Part 1: {len(been)}")
 
 
@@ -30,9 +34,9 @@ def isloopy(pos, direction):
     b = {(p, d)}
     while True:
         np = (p[0] + d[0], p[1] + d[1])
-        if not (0 <= np[0] < len(M) and 0 <= np[1] < len(M[0])):
+        if np not in M:
             return False
-        elif M[np[0]][np[1]] == "#":
+        elif M[np] == "#":
             d = R[d]
         else:
             if (np, d) in b or (np, d) in B:
@@ -51,16 +55,15 @@ while True:
     B.add((p, d))
     been.add(p)
     np = (p[0] + d[0], p[1] + d[1])
-    if not (0 <= np[0] < len(M) and 0 <= np[1] < len(M[0])):
+    if np not in M:
         break
-    elif M[np[0]][np[1]] == "#":
+    elif M[np] == "#":
         d = R[d]
-    # else:  # here is a valid step, so we have the choice of plugging it and checking for loopiness
     else:
         if np not in been:  # cannot add obstacle on the path the guard already taken
-            M[np[0]][np[1]] = "#"
+            M[np] = "#"
             if isloopy(p, d):
                 p2 += 1
-            M[np[0]][np[1]] = "."
+            M[np] = "."
         p = np
 print(f"Part 2: {p2}")
