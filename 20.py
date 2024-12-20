@@ -30,8 +30,10 @@ ch_range = {2, -2, 2j, -2j}
 for n in range(step + 1 - 102):
     t = T[n]
     for d in ch_range:
-        if t + d in R and R[t + d] - n >= 100 + 2:
-            P1 += 1
+        try:
+            P1 += R[t + d] - n >= 100 + 2
+        except KeyError:
+            pass
 print(f"Part 1: {P1}")
 
 # Part 2: extend search range to 20 manhattan distance
@@ -45,6 +47,8 @@ ch_range = set(
 for n in range(step + 1 - 102):
     t = T[n]
     for d in ch_range:
-        if t + d in R and R[t + d] - n >= 100 + abs(d.real) + abs(d.imag):
-            P2 += 1
+        try:
+            P2 += R[t + d] - n >= 100 + abs(d.real) + abs(d.imag)
+        except KeyError:
+            pass
 print(f"Part 2: {P2}")
